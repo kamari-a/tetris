@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
   
 /* The Tetrominoes - this is created through the grid I have made on Google sheets. 
-
 The array is pulling the position from the numbers I have assigned to each block, represented through the 200 divs in the HTML file */
 
     const lTetromino = [
@@ -64,7 +63,7 @@ The array is pulling the position from the numbers I have assigned to each block
 
     let current = theTetrominoes[random][currentRotation];
 
-    function draw() {
+    const draw = () => {
         current.forEach(index => {
             squares[currentPosition + index].classList.add('tetromino')
             //this adds the color
@@ -72,7 +71,7 @@ The array is pulling the position from the numbers I have assigned to each block
         })
     };
 
-    function undraw() {
+    const undraw = () => {
         current.forEach(index => {
             squares[currentPosition + index].classList.remove('tetromino')
             //this removes the color
@@ -80,21 +79,21 @@ The array is pulling the position from the numbers I have assigned to each block
         })
     };
 
-    function control(e) {
+    const control = (e) => {
         if(e.keyCode === 37) {
-            moveLeft()
+            moveLeft();
         } else if (e.keyCode === 38) {
-            rotate()
+            rotate();
         } else if (e.keyCode === 39) {
-            moveRight()
+            moveRight();
         } else if (e.keyCode === 40) {
-            moveDown()
+            moveDown();
         }
     };
 
     document.addEventListener('keyup', control);
 
-    function moveDown() {
+    const moveDown = () => {
         undraw();
         currentPosition += width;
         draw();
@@ -102,7 +101,7 @@ The array is pulling the position from the numbers I have assigned to each block
     };
 
 //stops the tetromino at the bottom of the grid e.g. freezing it in to place
-    function freeze() {
+    const freeze = () => {
         if(current.some(index => squares[currentPosition + index + width].classList.contains('taken'))) {
             current.forEach(index => squares[currentPosition + index].classList.add('taken'));
             // start a new tetromino falling
@@ -118,12 +117,13 @@ The array is pulling the position from the numbers I have assigned to each block
     };
 
 //moves the tetromino left, unless is at the edge or there is a blockage
-    function moveLeft() {
+    const moveLeft = () => {
         undraw();
         const isAtLeftEdge = current.some(index => (currentPosition + index) % width === 0);
 
-        if(!isAtLeftEdge) currentPosition -=1;
-
+        if(!isAtLeftEdge) {
+            currentPosition -=1;
+        };
         if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
             currentPosition +=1
         };
@@ -132,24 +132,25 @@ The array is pulling the position from the numbers I have assigned to each block
     };
 
 //move the tetromino right, unless is at the edge or there is a blockage. 
-    function moveRight() {
+    const moveRight = () => {
         undraw();
         const isAtRightEdge = current.some(index => (currentPosition + index) % width === width -1);
 
-        if(!isAtRightEdge) currentPosition +=1;
-
+        if(!isAtRightEdge) {
+            currentPosition +=1;
+        };
         if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
-            currentPosition =-1
+            currentPosition =-1;
         };
 
         draw();
     };
 
-    function rotate() {
+    const rotate = () => {
         undraw();
         currentRotation ++ ;
         if(currentRotation === current.length) { 
-            currentRotation = 0
+            currentRotation = 0;
         };
         current = theTetrominoes[random][currentRotation];
         draw();
@@ -169,11 +170,11 @@ The array is pulling the position from the numbers I have assigned to each block
     ]
 
 //display the shape in the mini-grid display
-    function displayShape() {
+    const displayShape = () => {
         displaySquares.forEach(square => {
-            square.classList.remove('tetromino')
+            square.classList.remove('tetromino');
             //this removes the color
-            square.style.backgroundColor = ''
+            square.style.backgroundColor = '';
         });
 
         //adds the next tetromino shape
@@ -183,11 +184,10 @@ The array is pulling the position from the numbers I have assigned to each block
         });
     }
 
-
     startBtn.addEventListener('click', () => {
         if (timerId) {
-            clearInterval(timerId)
-            timerId = null
+            clearInterval(timerId);
+            timerId = null;
         } else {
             draw();
             timerId = setInterval(moveDown, 1000);
@@ -196,10 +196,9 @@ The array is pulling the position from the numbers I have assigned to each block
         }
     });
  
-
-    function addScore() {
-        for (let i = 0; i < 199; i +=width) {
-            const row = [i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9]
+    const addScore = () => {
+        for (let i = 0; i < 199; i += width) {
+            const row = [i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9];
 
             if(row.every(index => squares[index].classList.contains('taken'))) {
                 score += 10;
@@ -207,20 +206,17 @@ The array is pulling the position from the numbers I have assigned to each block
                 row.forEach(index => {
                     squares[index].classList.remove('taken');
                     squares[index].classList.remove('tetromino');
-                    //we also need to remove the color
+                    //removes the color
                     squares[index].style.backgroundColor = '';
                 })
-
                 const squaresRemoved = squares.splice(i, width);
-
                 squares = squaresRemoved.concat(squares);
                 squares.forEach(cell => grid.appendChild(cell));
             }
         }
     }
 
-
-    function gameOver() {
+    const gameOver = () => {
         if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
             scoreDisplay.innerHTML = 'Game Over!';
             clearInterval(timerId);
@@ -228,8 +224,6 @@ The array is pulling the position from the numbers I have assigned to each block
     }
 }) ;
 
-
-//made following this tutorial: https://www.youtube.com/watch?v=rAUn1Lom6dw
 
 
 
